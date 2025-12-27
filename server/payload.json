@@ -1,0 +1,1 @@
+{"prompt":"Erzeuge eine API für Bestellungen mit POST /orders (orderItems, totalAmount) und GET /orders/{id}. Status: pending, shipped, cancelled."}
