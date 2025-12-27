@@ -1,0 +1,1 @@
+Dieses Projekt nimmt eine textuelle Beschreibung und erstellt daraus eine minimal lauffähige Orders‑API. Es enthält eine Web‑UI zum Generieren von API‑Schlüsseln, Anlegen und Abrufen von Bestellungen und ist für schnelles Deployment auf Render vorbereitet.
