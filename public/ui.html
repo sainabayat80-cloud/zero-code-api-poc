@@ -1,11 +1,66 @@
-<!doctype html> 
-<html> 
-<head> 
-<meta charset="utf-8"> 
-<title>Orders UI</title> 
-</head> 
-<body> 
-<h1>Orders UI</h1> 
-<p>Use the API endpoints to generate keys and create orders.</p> 
-</body> 
-</html> 
+<!doctype html>
+<html>
+<head>
+   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Orders PoC UI</title>
+  <style>body{font-family:Arial;margin:20px} textarea{width:100%;height:80px}</style>
+</head>
+<body>
+  <h3>Generate API</h3>
+  <label for="prompt">Prompt für API‑Generierung</label><br/>
+  <textarea id="prompt">Erzeuge eine API für Bestellungen mit POST /orders (orderItems, totalAmount) und GET /orders/{id}. Status: pending, shipped, cancelled.</textarea><br/>
+  <button id="gen">Generate</button>
+  <pre id="genRes"></pre>
+
+  <h3>Order Tester</h3>
+  <label for="apikey">API Key</label><br/>
+  <input id="apikey" style="width:400px"/><br/><br/>
+  <button id="create">Create Order</button>
+  <pre id="createRes"></pre>
+  <br/>
+  <label for="orderId">Order ID</label><br/>
+  <input id="orderId" placeholder="Order ID" style="width:400px"/>
+  <button id="get">Get Order</button>
+  <pre id="getRes"></pre>
+
+<script>
+const base = 'http://localhost:3000';
+document.getElementById('gen').onclick = async () => {
+  const prompt = document.getElementById('prompt').value;
+  const res = await fetch(base + '/generate', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({prompt})
+  });
+  const json = await res.json();
+  document.getElementById('genRes').textContent = JSON.stringify(json, null, 2);
+  if (json.apiKey) document.getElementById('apikey').value = json.apiKey;
+};
+
+document.getElementById('create').onclick = async () => {
+  const key = document.getElementById('apikey').value.trim();
+  const body = { orderItems:[{sku:'A1',name:'Widget',quantity:2,price:9.99}], totalAmount:19.98 };
+  const res = await fetch(base + '/orders', {
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key': key},
+    body: JSON.stringify(body)
+  });
+  const json = await res.json();
+  document.getElementById('createRes').textContent = JSON.stringify(json, null, 2);
+  if (json.id) document.getElementById('orderId').value = json.id;
+};
+
+document.getElementById('get').onclick = async () => {
+  const key = document.getElementById('apikey').value.trim();
+  const id = document.getElementById('orderId').value.trim();
+  const res = await fetch(base + '/orders/' + encodeURIComponent(id), {
+    method:'GET',
+    headers:{'x-api-key': key}
+  });
+  const json = await res.json();
+  document.getElementById('getRes').textContent = JSON.stringify(json, null, 2);
+};
+</script>
+</body>
+</html>
