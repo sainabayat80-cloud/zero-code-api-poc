@@ -330,6 +330,7 @@
     .collection-display {
       display: none;
       margin-top: 24px;
+      animation: fadeInUp 0.5s ease-out;
     }
 
     .collection-display.active {
@@ -337,63 +338,77 @@
     }
 
     .collection-header {
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
-      border: 1px solid var(--accent-blue);
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 20px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.15));
+      border: 2px solid var(--accent-blue);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--glow-blue);
     }
 
     .collection-title {
-      font-size: 1.3rem;
+      font-size: 1.5rem;
       font-weight: 700;
       color: var(--accent-cyan);
-      margin-bottom: 8px;
+      margin-bottom: 12px;
     }
 
     .collection-meta {
       display: flex;
-      gap: 16px;
+      gap: 20px;
       flex-wrap: wrap;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: var(--text-secondary);
     }
 
     .collection-meta span {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
+      font-weight: 500;
     }
 
     .services-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 16px;
-      margin-top: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 20px;
+      margin-top: 24px;
     }
 
     .service-card {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 16px;
+      background: linear-gradient(145deg, var(--bg-card), var(--bg-secondary));
+      border: 2px solid var(--border-color);
+      border-radius: 16px;
+      padding: 0;
       transition: all 0.3s ease;
       cursor: pointer;
+      overflow: hidden;
     }
 
     .service-card:hover {
       border-color: var(--accent-cyan);
-      box-shadow: 0 0 20px rgba(6, 182, 212, 0.2);
+      box-shadow: 0 0 30px rgba(6, 182, 212, 0.3);
+      transform: translateY(-4px);
     }
 
     .service-card.expanded {
       border-color: var(--accent-blue);
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+      background: linear-gradient(145deg, rgba(99, 102, 241, 0.08), rgba(139, 92, 246, 0.05));
+      box-shadow: var(--glow-purple);
     }
 
-    .service-header {
+    .service-card-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .service-card.expanded .service-card-header {
+      border-bottom: none;
+    }
+
+    .service-top-row {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
       margin-bottom: 12px;
     }
@@ -401,44 +416,171 @@
     .service-name {
       display: flex;
       align-items: center;
-      gap: 10px;
-      font-weight: 600;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 1.1rem;
       color: var(--text-primary);
     }
 
     .service-icon {
-      font-size: 20px;
+      font-size: 28px;
+      filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.3));
     }
 
     .service-endpoints {
       font-size: 0.75rem;
       color: var(--accent-cyan);
-      background: rgba(6, 182, 212, 0.1);
-      padding: 4px 10px;
-      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(99, 102, 241, 0.2));
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-weight: 600;
+      border: 1px solid rgba(6, 182, 212, 0.3);
     }
 
     .service-path {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+
+    /* GPT Agent Commentary */
+    .agent-commentary {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(6, 182, 212, 0.05));
+      border-left: 3px solid var(--accent-green);
+      border-radius: 0 12px 12px 0;
+      padding: 16px;
+      margin-top: 12px;
+    }
+
+    .agent-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .agent-badge {
+      background: linear-gradient(135deg, var(--accent-green), var(--accent-cyan));
+      color: var(--bg-primary);
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .agent-title {
       font-size: 0.8rem;
-      color: var(--text-secondary);
-      margin-bottom: 8px;
+      color: var(--accent-green);
+      font-weight: 600;
     }
 
-    .service-endpoint-list {
+    .agent-text {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    .agent-insight {
+      display: inline-block;
+      background: rgba(6, 182, 212, 0.1);
+      color: var(--accent-cyan);
+      padding: 2px 8px;
+      border-radius: 4px;
       font-size: 0.75rem;
-      color: var(--text-secondary);
-      line-height: 1.8;
+      font-weight: 600;
+      margin-top: 8px;
     }
 
+    /* Service Details Panel */
     .service-details {
       display: none;
-      margin-top: 12px;
-      padding-top: 12px;
+      padding: 20px;
       border-top: 1px solid var(--border-color);
+      background: rgba(10, 10, 15, 0.5);
     }
 
     .service-card.expanded .service-details {
       display: block;
+      animation: slideDown 0.3s ease-out;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        max-height: 0;
+      }
+      to {
+        opacity: 1;
+        max-height: 1000px;
+      }
+    }
+
+    .endpoint-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .endpoint-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 0.8rem;
+      transition: all 0.2s;
+    }
+
+    .endpoint-item:hover {
+      border-color: var(--accent-blue);
+      background: rgba(99, 102, 241, 0.05);
+    }
+
+    .endpoint-method {
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+    }
+
+    .endpoint-method.post {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--accent-green);
+    }
+
+    .endpoint-method.get {
+      background: rgba(99, 102, 241, 0.2);
+      color: var(--accent-blue);
+    }
+
+    .endpoint-method.put {
+      background: rgba(249, 115, 22, 0.2);
+      color: var(--accent-orange);
+    }
+
+    .endpoint-method.delete {
+      background: rgba(239, 68, 68, 0.2);
+      color: var(--accent-red);
+    }
+
+    .endpoint-path {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      color: var(--text-primary);
+      flex: 1;
+    }
+
+    .expand-hint {
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      text-align: center;
+      margin-top: 8px;
+      opacity: 0.7;
     }
 
     /* Examples Section */
@@ -504,6 +646,81 @@
       to { transform: rotate(360deg); }
     }
 
+    /* Collapsible Output */
+    .collapsible-output {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      margin-top: 16px;
+      overflow: hidden;
+    }
+
+    .collapsible-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s;
+    }
+
+    .collapsible-header:hover {
+      background: rgba(99, 102, 241, 0.05);
+    }
+
+    .collapsible-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .collapsible-icon {
+      transition: transform 0.3s ease;
+      font-size: 0.8rem;
+    }
+
+    .collapsible-output.collapsed .collapsible-icon {
+      transform: rotate(180deg);
+    }
+
+    .collapsible-content {
+      max-height: 400px;
+      overflow: auto;
+      transition: all 0.3s ease;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .collapsible-output.collapsed .collapsible-content {
+      max-height: 120px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .collapsible-output.collapsed .collapsible-content::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 40px;
+      background: linear-gradient(transparent, var(--bg-secondary));
+      pointer-events: none;
+    }
+
+    .collapsible-content pre {
+      margin: 0;
+      padding: 16px;
+      font-size: 0.75rem;
+      color: var(--accent-cyan);
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      line-height: 1.5;
+    }
+
     @media (max-width: 768px) {
       h1 { font-size: 1.8rem; }
       .grid { grid-template-columns: 1fr; }
@@ -556,8 +773,19 @@
           <span>Generate API Suite</span>
         </button>
 
-        <div class="output" id="suiteOutput" style="display: none;">
-          <pre id="suiteResult"></pre>
+        <!-- Collapsible Output -->
+        <div class="collapsible-output" id="suiteOutput" style="display: none;">
+          <div class="collapsible-header" onclick="toggleOutput('suiteOutput')">
+            <div class="collapsible-title">
+              <span>📋</span>
+              <span>API Generation Response</span>
+              <span id="suiteStatusBadge" style="margin-left: 8px; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; background: var(--accent-green); color: var(--bg-primary);">Success</span>
+            </div>
+            <span class="collapsible-icon">▲</span>
+          </div>
+          <div class="collapsible-content">
+            <pre id="suiteResult"></pre>
+          </div>
         </div>
 
         <!-- Collection Display -->
@@ -669,8 +897,21 @@
       const result = document.getElementById(elementId.replace('Output', 'Result'));
 
       output.style.display = 'block';
+      output.classList.add('collapsed'); // Start collapsed (showing preview)
       result.className = isError ? 'error' : 'success';
       result.textContent = status ? `HTTP ${status}\n${JSON.stringify(data, null, 2)}` : JSON.stringify(data, null, 2);
+
+      // Update status badge if it exists
+      const badge = document.getElementById(elementId.replace('Output', 'StatusBadge'));
+      if (badge) {
+        badge.textContent = isError ? 'Error' : 'Success';
+        badge.style.background = isError ? 'var(--accent-red)' : 'var(--accent-green)';
+      }
+    }
+
+    function toggleOutput(elementId) {
+      const output = document.getElementById(elementId);
+      output.classList.toggle('collapsed');
     }
 
     function formatDate(isoString) {
@@ -709,18 +950,72 @@
       btn.innerHTML = '<span class="loading"></span> Generating API Suite...';
       btn.disabled = true;
 
-      // For demo, simulate a collection response
+      // For demo, simulate a collection response with rich mock data
       // In production, this would call the actual /generate-collection endpoint
       setTimeout(() => {
         const mockCollection = {
           id: 'col-' + Date.now(),
-          name: 'Business Platform API Collection',
+          name: 'E-Commerce Platform API Collection',
           masterApiKey: 'master-' + Math.random().toString(36).substr(2, 9),
           services: [
             {
-              name: 'Core Service',
-              basePath: '/api/v1',
-              endpoints: ['POST /resources', 'GET /resources', 'GET /resources/:id', 'PUT /resources/:id', 'DELETE /resources/:id']
+              name: 'Products Service',
+              basePath: '/api/v1/products',
+              endpoints: [
+                { method: 'POST', path: '/api/v1/products', desc: 'Create new product' },
+                { method: 'GET', path: '/api/v1/products', desc: 'List all products' },
+                { method: 'GET', path: '/api/v1/products/:id', desc: 'Get product by ID' },
+                { method: 'PUT', path: '/api/v1/products/:id', desc: 'Update product' },
+                { method: 'DELETE', path: '/api/v1/products/:id', desc: 'Delete product' }
+              ],
+              agentCommentary: 'Core catalog management. Essential for any e-commerce system. Includes SKU tracking, inventory awareness, and category hierarchies. Critical for search and filtering capabilities.',
+              agentInsight: 'High Priority • Foundation Layer'
+            },
+            {
+              name: 'Orders Service',
+              basePath: '/api/v1/orders',
+              endpoints: [
+                { method: 'POST', path: '/api/v1/orders', desc: 'Create new order' },
+                { method: 'GET', path: '/api/v1/orders', desc: 'List orders' },
+                { method: 'GET', path: '/api/v1/orders/:id', desc: 'Get order details' },
+                { method: 'PUT', path: '/api/v1/orders/:id/status', desc: 'Update order status' }
+              ],
+              agentCommentary: 'Transactional heart of the system. Handles order lifecycle from creation to fulfillment. Integrates with Products for inventory checks and Customers for profile data.',
+              agentInsight: 'Critical • Transaction Core'
+            },
+            {
+              name: 'Customers Service',
+              basePath: '/api/v1/customers',
+              endpoints: [
+                { method: 'POST', path: '/api/v1/customers', desc: 'Register customer' },
+                { method: 'GET', path: '/api/v1/customers/:id', desc: 'Get customer profile' },
+                { method: 'PUT', path: '/api/v1/customers/:id', desc: 'Update profile' },
+                { method: 'GET', path: '/api/v1/customers/:id/orders', desc: 'Get customer orders' }
+              ],
+              agentCommentary: 'User identity and relationship management. Stores preferences, shipping addresses, and order history. Key for personalization and loyalty programs.',
+              agentInsight: 'Essential • User Experience'
+            },
+            {
+              name: 'Inventory Service',
+              basePath: '/api/v1/inventory',
+              endpoints: [
+                { method: 'GET', path: '/api/v1/inventory/:productId', desc: 'Check stock level' },
+                { method: 'POST', path: '/api/v1/inventory/reserve', desc: 'Reserve items' },
+                { method: 'PUT', path: '/api/v1/inventory/:productId', desc: 'Update stock' }
+              ],
+              agentCommentary: 'Real-time stock management. Prevents overselling and enables backorder handling. Critical integration point with warehouse systems.',
+              agentInsight: 'Operational • Supply Chain'
+            },
+            {
+              name: 'Payments Service',
+              basePath: '/api/v1/payments',
+              endpoints: [
+                { method: 'POST', path: '/api/v1/payments', desc: 'Process payment' },
+                { method: 'GET', path: '/api/v1/payments/:id', desc: 'Get payment status' },
+                { method: 'POST', path: '/api/v1/payments/refund', desc: 'Process refund' }
+              ],
+              agentCommentary: 'Revenue collection gateway. Handles payment processor integrations, secure tokenization, and transaction reconciliation. PCI compliance required.',
+              agentInsight: 'Security Critical • Revenue'
             }
           ],
           createdAt: new Date().toISOString()
@@ -754,22 +1049,48 @@
       collection.services.forEach((service, index) => {
         const card = document.createElement('div');
         card.className = 'service-card';
+        card.style.animationDelay = `${index * 0.1}s`;
+
+        // Build endpoint list HTML
+        const endpointsList = service.endpoints.map(ep => `
+          <div class="endpoint-item">
+            <span class="endpoint-method ${ep.method.toLowerCase()}">${ep.method}</span>
+            <span class="endpoint-path">${ep.path}</span>
+          </div>
+        `).join('');
+
         card.innerHTML = `
-          <div class="service-header">
-            <div class="service-name">
-              <span class="service-icon">${getServiceIcon(service.name)}</span>
-              <span>${service.name}</span>
+          <div class="service-card-header">
+            <div class="service-top-row">
+              <div class="service-name">
+                <span class="service-icon">${getServiceIcon(service.name)}</span>
+                <span>${service.name}</span>
+              </div>
+              <span class="service-endpoints">${service.endpoints.length} endpoints</span>
             </div>
-            <span class="service-endpoints">${service.endpoints.length} endpoints</span>
+            <div class="service-path">${service.basePath}</div>
+
+            ${service.agentCommentary ? `
+              <div class="agent-commentary">
+                <div class="agent-header">
+                  <span class="agent-badge">🤖 GPT-5.2</span>
+                  <span class="agent-title">Agent Analysis</span>
+                </div>
+                <div class="agent-text">"${service.agentCommentary}"</div>
+                ${service.agentInsight ? `<div class="agent-insight">${service.agentInsight}</div>` : ''}
+              </div>
+            ` : ''}
+
+            <div class="expand-hint">Click to ${service.endpoints.length > 3 ? 'see all endpoints' : 'expand'}</div>
           </div>
-          <div class="service-path">${service.basePath}</div>
-          <div class="service-endpoint-list">
-            ${service.endpoints.slice(0, 3).join('<br>')}
-            ${service.endpoints.length > 3 ? `<br>... and ${service.endpoints.length - 3} more` : ''}
-          </div>
+
           <div class="service-details">
-            <div style="font-size: 0.75rem; color: var(--accent-cyan);">All Endpoints:</div>
-            ${service.endpoints.map(e => `<div style="font-size: 0.7rem; color: var(--text-secondary); padding: 2px 0;">${e}</div>`).join('')}
+            <div style="font-size: 0.85rem; color: var(--accent-cyan); margin-bottom: 12px; font-weight: 600;">
+              🔌 All Endpoints
+            </div>
+            <div class="endpoint-list">
+              ${endpointsList}
+            </div>
           </div>
         `;
 
