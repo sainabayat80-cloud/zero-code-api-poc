@@ -128,6 +128,29 @@ if (fs.existsSync(publicDir)) {
     res.sendFile(researchPath);
   });
 
+  // API Suite page
+  app.get('/api-suite', (req, res) => {
+    const suitePath = path.join(publicDir, 'api-suite.html');
+
+    if (!fs.existsSync(suitePath)) {
+      return res.status(404).send('api-suite.html not found');
+    }
+
+    const stats = fs.statSync(suitePath);
+    const etag = `"${stats.mtime.getTime()}-${stats.size}"`;
+
+    if (req.headers['if-none-match'] === etag) {
+      return res.status(304).end();
+    }
+
+    res.setHeader('Content-Type', 'text/html');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('ETag', etag);
+    res.setHeader('Last-Modified', stats.mtime.toUTCString());
+
+    res.sendFile(suitePath);
+  });
+
   console.log('✓ Live reload enabled for HTML files');
 } else {
   console.warn('public directory not found. Create a public/ui.html to serve the UI.');
@@ -166,8 +189,8 @@ app.post('/generate', async (req, res) => {
       spec: result.spec,
       endpoints: result.runtime.endpoints,
       message: process.env.OPENAI_API_KEY
-        ? 'API generated using GPT-4'
-        : 'API generated using fallback mode (set OPENAI_API_KEY for GPT-4 generation)'
+        ? 'API generated using GPT-5.2'
+        : 'API generated using fallback mode (set OPENAI_API_KEY for GPT-5.2 generation)'
     });
 
   } catch (error) {

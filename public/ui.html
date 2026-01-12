@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zero-Code API Generator | GPT-Powered</title>
+  <title>Zero-Code API Generator | GPT-5.2-Powered</title>
   <style>
     * {
       margin: 0;
@@ -599,7 +599,8 @@
       <span>Zero-Code API Generator</span>
     </div>
     <div class="nav-links">
-      <a href="/" class="nav-link active">Demo</a>
+      <a href="/" class="nav-link active">Single API</a>
+      <a href="/api-suite" class="nav-link">API Suite</a>
       <a href="/research" class="nav-link">Research</a>
     </div>
   </nav>
@@ -610,7 +611,7 @@
         <div class="logo-icon">⚡</div>
       </div>
       <h1><span class="typewriter"><span class="typewriter-text">Zero-Code API Generator</span></span></h1>
-      <p class="subtitle">GPT-Powered REST API Generation for DBA Thesis</p>
+      <p class="subtitle">GPT-5.2-Powered REST API Generation for DBA Thesis</p>
       <div class="status-badge">
         <div class="status-dot"></div>
         <span id="serverStatus">Checking server...</span>
@@ -775,7 +776,7 @@
 
       if (r.ok && r.body) {
         const features = [];
-        if (r.body.features?.openai) features.push(`GPT-4 (${r.body.features.model})`);
+        if (r.body.features?.openai) features.push(`GPT-5.2 (${r.body.features.model})`);
         else features.push('Fallback mode');
 
         statusEl.innerHTML = `✓ Online | ${features.join(' | ')} | ${r.body.generatedApis || 0} APIs`;

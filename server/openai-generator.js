@@ -25,7 +25,7 @@ class OpenAIGenerator {
 
     try {
       const completion = await this.client.chat.completions.create({
-        model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
+        model: process.env.OPENAI_MODEL || 'gpt-5.2-mini',
         messages: [
           {
             role: 'system',

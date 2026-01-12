@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Suite Generator | GPT-5.2-Powered</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-card: #1a1a24;
+      --text-primary: #f0f0f5;
+      --text-secondary: #a0a0b0;
+      --accent-blue: #6366f1;
+      --accent-purple: #8b5cf6;
+      --accent-cyan: #06b6d4;
+      --accent-green: #10b981;
+      --accent-orange: #f97316;
+      --border-color: #2a2a3a;
+      --glow-blue: 0 0 20px rgba(99, 102, 241, 0.3);
+      --glow-purple: 0 0 20px rgba(139, 92, 246, 0.3);
+    }
+
+    body {
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    .bg-grid {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image:
+        linear-gradient(var(--border-color) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
+      background-size: 50px 50px;
+      opacity: 0.05;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(10, 10, 15, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .nav-logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      color: var(--accent-cyan);
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 60px;
+      margin-top: 60px;
+      animation: fadeInDown 1s ease-out;
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .logo-icon {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: var(--glow-blue);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--text-primary), var(--accent-cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+    }
+
+    .beta-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.1), rgba(234, 88, 12, 0.1));
+      border: 1px solid var(--accent-orange);
+      border-radius: 20px;
+      font-size: 0.85rem;
+      color: var(--accent-orange);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+      transition: all 0.3s ease;
+      animation: fadeInUp 0.6s ease-out;
+      animation-fill-mode: both;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card:hover {
+      border-color: var(--accent-blue);
+      box-shadow: var(--glow-blue);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    textarea, input[type="text"] {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    textarea:focus, input[type="text"]:focus {
+      outline: none;
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+
+    label {
+      display: block;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .input-group {
+      margin-bottom: 16px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--glow-blue);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent-blue);
+      box-shadow: none;
+    }
+
+    .output {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+      overflow-x: auto;
+    }
+
+    .output pre {
+      margin: 0;
+      font-size: 0.85rem;
+      color: var(--accent-cyan);
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .success {
+      color: var(--accent-green);
+    }
+
+    .error {
+      color: var(--accent-red);
+    }
+
+    /* Collection Display */
+    .collection-display {
+      display: none;
+      margin-top: 24px;
+    }
+
+    .collection-display.active {
+      display: block;
+    }
+
+    .collection-header {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+      border: 1px solid var(--accent-blue);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .collection-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      margin-bottom: 8px;
+    }
+
+    .collection-meta {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .collection-meta span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .service-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .service-card:hover {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 20px rgba(6, 182, 212, 0.2);
+    }
+
+    .service-card.expanded {
+      border-color: var(--accent-blue);
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+    }
+
+    .service-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .service-name {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .service-icon {
+      font-size: 20px;
+    }
+
+    .service-endpoints {
+      font-size: 0.75rem;
+      color: var(--accent-cyan);
+      background: rgba(6, 182, 212, 0.1);
+      padding: 4px 10px;
+      border-radius: 12px;
+    }
+
+    .service-path {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .service-endpoint-list {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    .service-details {
+      display: none;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .service-card.expanded .service-details {
+      display: block;
+    }
+
+    /* Examples Section */
+    .examples {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+      margin-top: 40px;
+    }
+
+    .examples-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--accent-cyan);
+    }
+
+    .example-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 12px;
+    }
+
+    .example-item {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .example-item:hover {
+      border-color: var(--accent-blue);
+      background: rgba(99, 102, 241, 0.05);
+    }
+
+    .example-domain {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .example-desc {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .loading {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--border-color);
+      border-top-color: var(--accent-blue);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 1.8rem; }
+      .grid { grid-template-columns: 1fr; }
+      .services-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+
+  <nav class="nav">
+    <div class="nav-logo">
+      <div class="nav-logo-icon">⚡</div>
+      <span>Zero-Code API Generator</span>
+    </div>
+    <div class="nav-links">
+      <a href="/" class="nav-link">Single API</a>
+      <a href="/api-suite" class="nav-link active">API Suite</a>
+      <a href="/research" class="nav-link">Research</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <header>
+      <div class="logo">
+        <div class="logo-icon">📦</div>
+      </div>
+      <h1>API Suite Generator</h1>
+      <p class="subtitle">Generate Complete API Collections with GPT-5.2</p>
+      <div class="beta-badge">
+        <span>🚀</span>
+        <span>Phase 2 - Smart Detection & Collection Generation</span>
+      </div>
+    </header>
+
+    <div class="grid">
+      <!-- API Suite Generator Card -->
+      <div class="card" style="grid-column: 1 / -1;">
+        <div class="card-header">
+          <div class="card-icon">🤖</div>
+          <h2 class="card-title">Generate API Collection</h2>
+        </div>
+
+        <div class="input-group">
+          <label for="suitePrompt">Describe Your Business Case</label>
+          <textarea id="suitePrompt" placeholder="e.g., Build an e-commerce platform with product catalog, order management, customer accounts, and payment processing">Build an e-commerce platform with product catalog, order management, customer accounts, inventory tracking, and payment processing</textarea>
+        </div>
+
+        <button class="btn" id="generateSuiteBtn">
+          <span>Generate API Suite</span>
+        </button>
+
+        <div class="output" id="suiteOutput" style="display: none;">
+          <pre id="suiteResult"></pre>
+        </div>
+
+        <!-- Collection Display -->
+        <div class="collection-display" id="collectionDisplay">
+          <div class="collection-header">
+            <div class="collection-title" id="collectionTitle">📦 E-Commerce Platform API Collection</div>
+            <div class="collection-meta">
+              <span>🔑 <span id="collectionKey">Key: abc-123-xyz</span></span>
+              <span>📊 <span id="collectionServices">5 Services</span></span>
+              <span>🔗 <span id="collectionEndpoints">19 Endpoints</span></span>
+              <span>📅 <span id="collectionDate">Jan 12, 2026</span></span>
+            </div>
+          </div>
+
+          <div class="services-grid" id="servicesGrid">
+            <!-- Services will be dynamically inserted here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Examples -->
+      <div class="card" style="grid-column: 1 / -1;">
+        <div class="card-header">
+          <div class="card-icon">💡</div>
+          <h2 class="card-title">Example Business Cases</h2>
+        </div>
+
+        <div class="example-list">
+          <div class="example-item" onclick="useExample('ecommerce')">
+            <div class="example-domain">🛒 E-Commerce</div>
+            <div class="example-desc">Products, Orders, Customers, Inventory, Payments</div>
+          </div>
+          <div class="example-item" onclick="useExample('healthcare')">
+            <div class="example-domain">🏥 Healthcare Clinic</div>
+            <div class="example-desc">Patients, Doctors, Appointments, Prescriptions</div>
+          </div>
+          <div class="example-item" onclick="useExample('logistics')">
+            <div class="example-domain">🚚 Logistics</div>
+            <div class="example-desc">Shipments, Routes, Drivers, Vehicles, Tracking</div>
+          </div>
+          <div class="example-item" onclick="useExample('restaurant')">
+            <div class="example-domain">🍽️ Restaurant</div>
+            <div class="example-desc">Menu, Orders, Reservations, Tables, Staff</div>
+          </div>
+          <div class="example-item" onclick="useExample('banking')">
+            <div class="example-domain">🏦 Banking</div>
+            <div class="example-desc">Accounts, Transactions, Cards, Users, Auth</div>
+          </div>
+          <div class="example-item" onclick="useExample('crm')">
+            <div class="example-domain">💼 CRM System</div>
+            <div class="example-desc">Leads, Contacts, Deals, Activities, Reports</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info Section -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">📚</div>
+        <h2 class="card-title">About API Collections</h2>
+      </div>
+      <p style="color: var(--text-secondary); line-height: 1.8;">
+        The API Suite Generator analyzes your business case and creates <strong>complete API ecosystems</strong> with multiple related microservices.
+        Instead of generating a single API, it intelligently identifies all the services needed for your use case and generates them as a cohesive collection.
+      </p>
+      <ul style="color: var(--text-secondary); margin-top: 16px; padding-left: 20px; line-height: 2;">
+        <li><strong style="color: var(--accent-cyan);">One Master API Key</strong> - Access all services with a single key</li>
+        <li><strong style="color: var(--accent-cyan);">Related Services</strong> - AI understands how services relate to each other</li>
+        <li><strong style="color: var(--accent-cyan);">Enterprise Ready</strong> - Generate complete backends in under 2 minutes</li>
+        <li><strong style="color: var(--accent-cyan);">Domain Agnostic</strong> - Works across all industries</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    const BASE = window.location.origin;
+
+    // Example prompts
+    const examples = {
+      ecommerce: "Build an e-commerce platform with product catalog, order management, customer accounts, inventory tracking, and payment processing",
+      healthcare: "Create a healthcare clinic system with patient records, doctor profiles, appointment scheduling, prescription management, and medical history",
+      logistics: "Design a logistics management system with shipment tracking, route optimization, driver management, vehicle fleet, and delivery notifications",
+      restaurant: "Build a restaurant management system with menu items, order processing, table reservations, staff scheduling, and inventory",
+      banking: "Create a banking platform with account management, transaction processing, card services, user authentication, and fraud detection",
+      crm: "Design a CRM system with lead tracking, contact management, deal pipeline, activity logging, and sales reporting"
+    };
+
+    function useExample(key) {
+      document.getElementById('suitePrompt').value = examples[key];
+      document.getElementById('suitePrompt').focus();
+    }
+
+    // Helper functions
+    async function safeFetch(url, options) {
+      try {
+        const res = await fetch(url, options);
+        const text = await res.text();
+        let json;
+        try { json = text ? JSON.parse(text) : null; } catch(e) { json = text; }
+        return { ok: res.ok, status: res.status, body: json };
+      } catch (err) {
+        return { ok: false, status: 0, body: { error: err.message } };
+      }
+    }
+
+    function showOutput(elementId, data, status, isError = false) {
+      const output = document.getElementById(elementId);
+      const result = document.getElementById(elementId.replace('Output', 'Result'));
+
+      output.style.display = 'block';
+      result.className = isError ? 'error' : 'success';
+      result.textContent = status ? `HTTP ${status}\n${JSON.stringify(data, null, 2)}` : JSON.stringify(data, null, 2);
+    }
+
+    function formatDate(isoString) {
+      return new Date(isoString).toLocaleDateString();
+    }
+
+    // Service icons mapping
+    const serviceIcons = {
+      'products': '📦', 'orders': '🛒', 'customers': '👤', 'inventory': '📊',
+      'payments': '💳', 'patients': '🏥', 'doctors': '👨‍⚕️', 'appointments': '📅',
+      'prescriptions': '💊', 'shipments': '🚚', 'routes': '🗺️', 'drivers': '🚗',
+      'vehicles': '🚛', 'tracking': '📍', 'menu': '🍽️', 'reservations': '📋',
+      'tables': '🪑', 'staff': '👥', 'accounts': '🏦', 'transactions': '💸',
+      'cards': '💳', 'users': '👤', 'authentication': '🔐', 'leads': '🎯',
+      'contacts': '📞', 'deals': '💼', 'activities': '✅', 'reports': '📈'
+    };
+
+    function getServiceIcon(serviceName) {
+      const name = serviceName.toLowerCase();
+      for (const [key, icon] of Object.entries(serviceIcons)) {
+        if (name.includes(key)) return icon;
+      }
+      return '⚙️';
+    }
+
+    // Generate API Suite
+    document.getElementById('generateSuiteBtn').onclick = async function() {
+      const btn = this;
+      const prompt = document.getElementById('suitePrompt').value.trim();
+
+      if (!prompt) {
+        alert('Please describe your business case');
+        return;
+      }
+
+      btn.innerHTML = '<span class="loading"></span> Generating API Suite...';
+      btn.disabled = true;
+
+      // For demo, simulate a collection response
+      // In production, this would call the actual /generate-collection endpoint
+      setTimeout(() => {
+        const mockCollection = {
+          id: 'col-' + Date.now(),
+          name: 'Business Platform API Collection',
+          masterApiKey: 'master-' + Math.random().toString(36).substr(2, 9),
+          services: [
+            {
+              name: 'Core Service',
+              basePath: '/api/v1',
+              endpoints: ['POST /resources', 'GET /resources', 'GET /resources/:id', 'PUT /resources/:id', 'DELETE /resources/:id']
+            }
+          ],
+          createdAt: new Date().toISOString()
+        };
+
+        btn.innerHTML = '<span>Generate API Suite</span>';
+        btn.disabled = false;
+
+        // Show output
+        showOutput('suiteOutput', {
+          message: '🎯 API Collection generated successfully!',
+          note: 'This is a demo. Full collection generation coming in Phase 2.',
+          collection: mockCollection
+        }, 200);
+
+        // Display collection
+        displayCollection(mockCollection);
+      }, 1500);
+    };
+
+    function displayCollection(collection) {
+      document.getElementById('collectionTitle').textContent = `📦 ${collection.name}`;
+      document.getElementById('collectionKey').textContent = `Key: ${collection.masterApiKey}`;
+      document.getElementById('collectionServices').textContent = `${collection.services.length} Service${collection.services.length > 1 ? 's' : ''}`;
+      document.getElementById('collectionEndpoints').textContent = `${collection.services.reduce((sum, s) => sum + s.endpoints.length, 0)} Endpoints`;
+      document.getElementById('collectionDate').textContent = formatDate(collection.createdAt);
+
+      const grid = document.getElementById('servicesGrid');
+      grid.innerHTML = '';
+
+      collection.services.forEach((service, index) => {
+        const card = document.createElement('div');
+        card.className = 'service-card';
+        card.innerHTML = `
+          <div class="service-header">
+            <div class="service-name">
+              <span class="service-icon">${getServiceIcon(service.name)}</span>
+              <span>${service.name}</span>
+            </div>
+            <span class="service-endpoints">${service.endpoints.length} endpoints</span>
+          </div>
+          <div class="service-path">${service.basePath}</div>
+          <div class="service-endpoint-list">
+            ${service.endpoints.slice(0, 3).join('<br>')}
+            ${service.endpoints.length > 3 ? `<br>... and ${service.endpoints.length - 3} more` : ''}
+          </div>
+          <div class="service-details">
+            <div style="font-size: 0.75rem; color: var(--accent-cyan);">All Endpoints:</div>
+            ${service.endpoints.map(e => `<div style="font-size: 0.7rem; color: var(--text-secondary); padding: 2px 0;">${e}</div>`).join('')}
+          </div>
+        `;
+
+        card.onclick = () => card.classList.toggle('expanded');
+        grid.appendChild(card);
+      });
+
+      document.getElementById('collectionDisplay').classList.add('active');
+    }
+
+    // Live Reload for Localhost Development
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      console.log('🔄 Live reload enabled - checking every 5 seconds');
+
+      let lastEtag = null;
+
+      setInterval(async () => {
+        try {
+          const response = await fetch(window.location.href, { method: 'HEAD' });
+          const currentEtag = response.headers.get('ETag');
+
+          if (currentEtag && currentEtag !== lastEtag && lastEtag !== null) {
+            console.log('✅ File changed, reloading...');
+            window.location.reload();
+          }
+          lastEtag = currentEtag;
+        } catch (err) {
+          // Silently ignore network errors
+        }
+      }, 5000);
+    }
+  </script>
+</body>
+</html>
