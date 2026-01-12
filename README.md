@@ -8,7 +8,7 @@ GPT-powered REST API generation platform for DBA thesis - Generate production-re
 
 ## Features
 
-- **AI-Powered Generation**: Uses GPT-4 to generate OpenAPI 3.0 specifications from natural language
+- **AI-Powered Generation**: Uses GPT-5.2 to generate OpenAPI 3.0 specifications from natural language
 - **Instant Deployment**: Generated APIs are immediately deployable with CRUD endpoints
 - **API Key Management**: Automatic API key generation and authentication
 - **SQLite Persistence**: Built-in database for storing generated data
@@ -67,7 +67,7 @@ curl -X POST http://localhost:3000/generate \
   "apiKey": "uuid-key-here",
   "spec": { /* OpenAPI specification */ },
   "endpoints": ["POST /orders", "GET /orders/:id"],
-  "message": "API generated using GPT-4"
+  "message": "API generated using GPT-5.2"
 }
 ```
 
@@ -104,7 +104,7 @@ CORS_ORIGIN=*
 
 # OpenAI API (optional - without this, uses fallback mode)
 OPENAI_API_KEY=your_openai_api_key_here
-OPENAI_MODEL=gpt-4o-mini
+OPENAI_MODEL=gpt-5.2-mini
 
 # Admin key (optional - for admin endpoints)
 ADMIN_KEY=your_secure_admin_key_here
@@ -162,9 +162,9 @@ zero-code-api-poc/
 
 ### GPT Integration
 
-The system uses OpenAI's GPT-4 to generate REST API specifications:
+The system uses OpenAI's GPT-5.2 to generate REST API specifications:
 
-1. **Prompt Engineering**: System prompts guide GPT-4 to generate valid OpenAPI 3.0 specs
+1. **Prompt Engineering**: System prompts guide GPT-5.2 to generate valid OpenAPI 3.0 specs
 2. **Structured Output**: JSON mode ensures consistent, parseable output
 3. **Fallback Mode**: Rule-based generation when OpenAI is unavailable
 
@@ -190,7 +190,7 @@ User Prompt → OpenAI API → OpenAPI Spec → Runtime Config → Generated End
 2. **OpenAPI Compliance**: Generated specs follow OpenAPI 3.0 standards
 3. **Immediate Usability**: Generated APIs work instantly with CRUD operations
 4. **Scalability**: Multiple APIs can be generated and managed independently
-5. **AI vs Rules**: Compare GPT-4 generated vs fallback mode
+5. **AI vs Rules**: Compare GPT-5.2 generated vs fallback mode
 
 ### Presentation Tips
 
@@ -215,7 +215,7 @@ User Prompt → OpenAI API → OpenAPI Spec → Runtime Config → Generated End
 PORT=3000
 CORS_ORIGIN=https://your-domain.com
 OPENAI_API_KEY=your_production_key
-OPENAI_MODEL=gpt-4o-mini
+OPENAI_MODEL=gpt-5.2-mini
 NODE_ENV=production
 ```
 
