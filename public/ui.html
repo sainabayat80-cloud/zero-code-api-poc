@@ -1,87 +1,938 @@
-
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Orders PoC UI</title>
-  <style>body{font-family:Arial;margin:20px} textarea{width:100%;height:80px} input{width:100%}</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zero-Code API Generator | GPT-Powered</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-card: #1a1a24;
+      --text-primary: #f0f0f5;
+      --text-secondary: #a0a0b0;
+      --accent-blue: #6366f1;
+      --accent-purple: #8b5cf6;
+      --accent-cyan: #06b6d4;
+      --accent-green: #10b981;
+      --accent-red: #ef4444;
+      --border-color: #2a2a3a;
+      --glow-blue: 0 0 20px rgba(99, 102, 241, 0.3);
+      --glow-purple: 0 0 20px rgba(139, 92, 246, 0.3);
+    }
+
+    body {
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    .bg-grid {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image:
+        linear-gradient(var(--border-color) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
+      background-size: 50px 50px;
+      opacity: 0.05;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(10, 10, 15, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .nav-logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      color: var(--accent-cyan);
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 60px;
+      margin-top: 60px;
+      animation: fadeInDown 1s ease-out;
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .logo-icon {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: var(--glow-blue);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--text-primary), var(--accent-cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      font-size: 0.85rem;
+      margin-top: 20px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+      transition: all 0.3s ease;
+      animation: fadeInUp 0.6s ease-out;
+      animation-fill-mode: both;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card:nth-child(1) { animation-delay: 0.1s; }
+    .card:nth-child(2) { animation-delay: 0.2s; }
+    .card:nth-child(3) { animation-delay: 0.3s; }
+
+    .card:hover {
+      border-color: var(--accent-blue);
+      box-shadow: var(--glow-blue);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    label {
+      display: block;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    textarea, input[type="text"] {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    textarea:focus, input[type="text"]:focus {
+      outline: none;
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+
+    .input-group {
+      margin-bottom: 16px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--glow-blue);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent-blue);
+      box-shadow: none;
+    }
+
+    .output {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+      overflow-x: auto;
+    }
+
+    .output pre {
+      margin: 0;
+      font-size: 0.85rem;
+      color: var(--accent-cyan);
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .success {
+      color: var(--accent-green);
+    }
+
+    .error {
+      color: var(--accent-red);
+    }
+
+    .row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .row .input-group {
+      flex: 1;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .info-row:last-child {
+      border-bottom: none;
+    }
+
+    .info-label {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+
+    .info-value {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .api-link {
+      color: var(--accent-cyan);
+      text-decoration: none;
+      font-size: 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 16px;
+      padding: 8px 16px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .api-link:hover {
+      border-color: var(--accent-cyan);
+    }
+
+    .loading {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--border-color);
+      border-top-color: var(--accent-blue);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 1.8rem; }
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    /* Research Summary Styles */
+    .research-summary {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 32px;
+      margin-top: 40px;
+    }
+
+    .research-tag {
+      display: inline-block;
+      padding: 6px 14px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: white;
+    }
+
+    .hypothesis-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .hypothesis-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      transition: border-color 0.3s;
+    }
+
+    .hypothesis-card:hover {
+      border-color: var(--accent-blue);
+    }
+
+    .hypothesis-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--accent-green), var(--accent-cyan));
+      color: var(--bg-primary);
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+
+    .hypothesis-metrics {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .h-metric {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      padding: 12px 16px;
+      min-width: 60px;
+    }
+
+    .h-value {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+    }
+
+    .h-label {
+      font-size: 0.65rem;
+      color: var(--text-secondary);
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .theory-compact {
+      margin-top: 24px;
+    }
+
+    .theory-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .theory-pill {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 8px 16px;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+    }
+
+    .theory-pill:hover {
+      border-color: var(--accent-blue);
+      color: var(--text-primary);
+    }
+
+    .research-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      border-radius: 10px;
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: transform 0.2s;
+    }
+
+    .research-link:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Typewriter effect */
+    .typewriter {
+      display: inline;
+    }
+
+    .typewriter-text {
+      display: inline-block;
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 3px solid var(--accent-cyan);
+      width: 0;
+      animation: typing 2s steps(22, end) forwards, blink-caret 0.75s step-end infinite;
+    }
+
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+
+    @keyframes blink-caret {
+      from, to { border-color: transparent }
+      50% { border-color: var(--accent-cyan) }
+    }
+
+    /* API key flash animation */
+    @keyframes apiFlash {
+      0% {
+        background: var(--bg-secondary);
+        border-color: var(--border-color);
+        box-shadow: none;
+      }
+      25% {
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+        border-color: var(--accent-green);
+        box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+      }
+      50% {
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.3));
+        border-color: var(--accent-cyan);
+        box-shadow: 0 0 30px rgba(6, 182, 212, 0.4);
+      }
+      75% {
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+        border-color: var(--accent-green);
+        box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+      }
+      100% {
+        background: var(--bg-secondary);
+        border-color: var(--border-color);
+        box-shadow: none;
+      }
+    }
+
+    .api-key-flash {
+      animation: apiFlash 1.5s ease-out;
+    }
+  </style>
 </head>
 <body>
-  <h3>Generate API</h3>
-  <label for="prompt">Prompt für API‑Generierung</label><br/>
-  <textarea id="prompt">Erzeuge eine API für Bestellungen mit POST /orders (orderItems, totalAmount) und GET /orders/{id}. Status: pending, shipped, cancelled.</textarea><br/>
-  <button id="gen">Generate</button>
-  <pre id="genRes"></pre>
+  <div class="bg-grid"></div>
 
-  <h3>Order Tester</h3>
-  <label for="apikey">API Key</label><br/>
-  <input id="apikey" style="width:400px"/><br/><br/>
-  <button id="create">Create Order</button>
-  <pre id="createRes"></pre>
-  <br/>
-  <label for="orderId">Order ID</label><br/>
-  <input id="orderId" placeholder="Order ID" style="width:400px"/>
-  <button id="get">Get Order</button>
-  <pre id="getRes"></pre>
+  <nav class="nav">
+    <div class="nav-logo">
+      <div class="nav-logo-icon">⚡</div>
+      <span>Zero-Code API Generator</span>
+    </div>
+    <div class="nav-links">
+      <a href="/" class="nav-link active">Demo</a>
+      <a href="/research" class="nav-link">Research</a>
+    </div>
+  </nav>
 
-<script>
-const base = window.location.origin; // funktioniert lokal (http://localhost:3000) und deployed
+  <div class="container">
+    <header>
+      <div class="logo">
+        <div class="logo-icon">⚡</div>
+      </div>
+      <h1><span class="typewriter"><span class="typewriter-text">Zero-Code API Generator</span></span></h1>
+      <p class="subtitle">GPT-Powered REST API Generation for DBA Thesis</p>
+      <div class="status-badge">
+        <div class="status-dot"></div>
+        <span id="serverStatus">Checking server...</span>
+      </div>
+    </header>
 
-function show(elId, obj, status) {
-  const el = document.getElementById(elId);
-  if (!el) return;
-  if (status) el.textContent = `HTTP ${status}\n` + JSON.stringify(obj, null, 2);
-  else el.textContent = JSON.stringify(obj, null, 2);
-}
+    <div class="grid">
+      <!-- API Generator Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">🤖</div>
+          <h2 class="card-title">Generate API</h2>
+        </div>
 
-async function safeFetch(url, options) {
-  try {
-    const res = await fetch(url, options);
-    const text = await res.text();
-    let json;
-    try { json = text ? JSON.parse(text) : null; } catch(e) { json = text; }
-    return { ok: res.ok, status: res.status, body: json };
-  } catch (err) {
-    return { ok: false, status: 0, body: { error: err.message } };
-  }
-}
+        <div class="input-group">
+          <label for="prompt">Describe Your API</label>
+          <textarea id="prompt" placeholder="e.g., Create an orders API with POST /orders and GET /orders/:id. Orders should have items, total amount, and status.">Create an orders API with POST /orders and GET /orders/:id. Orders should contain items array, total amount, and status field (pending, shipped, cancelled).</textarea>
+        </div>
 
-document.getElementById('gen').onclick = async () => {
-  const prompt = document.getElementById('prompt').value;
-  const r = await safeFetch(base + '/generate', {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({prompt})
-  });
-  show('genRes', r.body, r.status);
-  if (r.ok && r.body && r.body.apiKey) document.getElementById('apikey').value = r.body.apiKey;
-};
+        <button class="btn" id="generateBtn">
+          <span>Generate API</span>
+        </button>
 
-document.getElementById('create').onclick = async () => {
-  const key = document.getElementById('apikey').value.trim();
-  if (!key) { alert('Bitte API Key eintragen'); return; }
-  // Einfaches orderItems-Format, das der Server erwartet (Array + totalAmount)
-  const body = { orderItems:[{sku:'A1', qty:2}], totalAmount:19.98 };
-  const r = await safeFetch(base + '/orders', {
-    method:'POST',
-    headers:{'Content-Type':'application/json','x-api-key': key},
-    body: JSON.stringify(body)
-  });
-  show('createRes', r.body, r.status);
-  if (r.ok && r.body && r.body.id) document.getElementById('orderId').value = r.body.id;
-};
+        <div class="output" id="genOutput" style="display: none;">
+          <pre id="genResult"></pre>
+        </div>
 
-document.getElementById('get').onclick = async () => {
-  const key = document.getElementById('apikey').value.trim();
-  const id = document.getElementById('orderId').value.trim();
-  if (!key || !id) { alert('API Key und Order ID erforderlich'); return; }
-  const r = await safeFetch(base + '/orders/' + encodeURIComponent(id), {
-    method:'GET',
-    headers:{'x-api-key': key}
-  });
-  show('getRes', r.body, r.status);
-};
-</script>
+        <a href="/api-docs" class="api-link" target="_blank">
+          📚 View API Documentation
+        </a>
+      </div>
+
+      <!-- API Keys Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">🔑</div>
+          <h2 class="card-title">API Keys</h2>
+        </div>
+
+        <div class="input-group">
+          <label for="apiKey">Your API Key</label>
+          <input type="text" id="apiKey" placeholder="Generated API key will appear here" />
+        </div>
+
+        <div id="apiInfo" style="display: none;">
+          <div class="info-row">
+            <span class="info-label">API ID</span>
+            <span class="info-value" id="apiId">-</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Endpoints</span>
+            <span class="info-value" id="apiEndpoints">-</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Created</span>
+            <span class="info-value" id="apiCreated">-</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Tester Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">🧪</div>
+          <h2 class="card-title">Test API</h2>
+        </div>
+
+        <div class="input-group">
+          <label for="orderItems">Order Items (JSON)</label>
+          <textarea id="orderItems" style="min-height: 80px;">[
+  { "sku": "PROD-001", "name": "Premium Widget", "qty": 2, "price": 29.99 },
+  { "sku": "PROD-002", "name": "Basic Gadget", "qty": 1, "price": 9.99 }
+]</textarea>
+        </div>
+
+        <div class="row">
+          <div class="input-group">
+            <label for="totalAmount">Total Amount</label>
+            <input type="text" id="totalAmount" value="69.97" />
+          </div>
+        </div>
+
+        <button class="btn" id="createOrderBtn">
+          <span>Create Order</span>
+        </button>
+
+        <div class="output" id="createOutput" style="display: none;">
+          <pre id="createResult"></pre>
+        </div>
+
+        <div class="input-group" style="margin-top: 16px;">
+          <label for="orderId">Order ID</label>
+          <input type="text" id="orderId" placeholder="Enter order ID to retrieve" />
+        </div>
+
+        <button class="btn btn-secondary" id="getOrderBtn">
+          <span>Get Order</span>
+        </button>
+
+        <div class="output" id="getOutput" style="display: none;">
+          <pre id="getResult"></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- API List Card -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">📋</div>
+        <h2 class="card-title">Generated APIs</h2>
+      </div>
+      <button class="btn btn-secondary" id="listApisBtn">
+        <span>Refresh List</span>
+      </button>
+      <div class="output" id="apisOutput" style="display: none;">
+        <pre id="apisResult"></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Research Link -->
+  <div class="container" style="max-width: 900px; margin-top: 40px; text-align: center;">
+    <p style="color: var(--text-secondary); margin-bottom: 16px;">Explore the research behind this demo</p>
+    <a href="/research" class="btn btn-secondary">
+      <span>📚 View Research Context</span>
+    </a>
+  </div>
+
+  <script>
+    const BASE = window.location.origin;
+
+    // Helper functions
+    async function safeFetch(url, options) {
+      try {
+        const res = await fetch(url, options);
+        const text = await res.text();
+        let json;
+        try { json = text ? JSON.parse(text) : null; } catch(e) { json = text; }
+        return { ok: res.ok, status: res.status, body: json };
+      } catch (err) {
+        return { ok: false, status: 0, body: { error: err.message } };
+      }
+    }
+
+    function showOutput(elementId, data, status, isError = false) {
+      const output = document.getElementById(elementId);
+      const result = document.getElementById(elementId.replace('Output', 'Result'));
+
+      output.style.display = 'block';
+      result.className = isError ? 'error' : 'success';
+      result.textContent = status ? `HTTP ${status}\n${JSON.stringify(data, null, 2)}` : JSON.stringify(data, null, 2);
+    }
+
+    function formatDate(isoString) {
+      return new Date(isoString).toLocaleString();
+    }
+
+    // Check server health
+    async function checkHealth() {
+      const r = await safeFetch(BASE + '/health');
+      const statusEl = document.getElementById('serverStatus');
+
+      if (r.ok && r.body) {
+        const features = [];
+        if (r.body.features?.openai) features.push(`GPT-4 (${r.body.features.model})`);
+        else features.push('Fallback mode');
+
+        statusEl.innerHTML = `✓ Online | ${features.join(' | ')} | ${r.body.generatedApis || 0} APIs`;
+      } else {
+        statusEl.innerHTML = '✗ Server offline';
+        statusEl.querySelector('.status-dot')?.style.setProperty('background', 'var(--accent-red)');
+      }
+    }
+
+    // Generate API
+    document.getElementById('generateBtn').onclick = async function() {
+      const btn = this;
+      const prompt = document.getElementById('prompt').value.trim();
+
+      if (!prompt) {
+        alert('Please enter a prompt describing your API');
+        return;
+      }
+
+      btn.innerHTML = '<span class="loading"></span> Generating...';
+      btn.disabled = true;
+
+      const r = await safeFetch(BASE + '/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt })
+      });
+
+      btn.innerHTML = '<span>Generate API</span>';
+      btn.disabled = false;
+
+      if (r.ok && r.body) {
+        showOutput('genOutput', r.body, r.status);
+        const apiKeyInput = document.getElementById('apiKey');
+        apiKeyInput.value = r.body.apiKey || '';
+        // Flash animation for API key
+        apiKeyInput.classList.add('api-key-flash');
+        setTimeout(() => apiKeyInput.classList.remove('api-key-flash'), 1500);
+        document.getElementById('apiId').textContent = r.body.id || '-';
+        document.getElementById('apiEndpoints').textContent = r.body.endpoints?.join(', ') || '-';
+        document.getElementById('apiCreated').textContent = formatDate(new Date().toISOString());
+        document.getElementById('apiInfo').style.display = 'block';
+      } else {
+        showOutput('genOutput', r.body, r.status, true);
+      }
+    };
+
+    // Create Order
+    document.getElementById('createOrderBtn').onclick = async function() {
+      const btn = this;
+      const apiKey = document.getElementById('apiKey').value.trim();
+
+      if (!apiKey) {
+        alert('Please generate an API key first');
+        return;
+      }
+
+      const orderItemsText = document.getElementById('orderItems').value.trim();
+      const totalAmount = parseFloat(document.getElementById('totalAmount').value);
+
+      let orderItems;
+      try {
+        orderItems = JSON.parse(orderItemsText);
+      } catch (e) {
+        alert('Invalid JSON for order items');
+        return;
+      }
+
+      btn.innerHTML = '<span class="loading"></span> Creating...';
+      btn.disabled = true;
+
+      const r = await safeFetch(BASE + '/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey
+        },
+        body: JSON.stringify({ orderItems, totalAmount })
+      });
+
+      btn.innerHTML = '<span>Create Order</span>';
+      btn.disabled = false;
+
+      if (r.ok && r.body) {
+        showOutput('createOutput', r.body, r.status);
+        if (r.body.id) {
+          document.getElementById('orderId').value = r.body.id;
+        }
+      } else {
+        showOutput('createOutput', r.body, r.status, true);
+      }
+    };
+
+    // Get Order
+    document.getElementById('getOrderBtn').onclick = async function() {
+      const btn = this;
+      const apiKey = document.getElementById('apiKey').value.trim();
+      const orderId = document.getElementById('orderId').value.trim();
+
+      if (!apiKey || !orderId) {
+        alert('Please enter both API key and Order ID');
+        return;
+      }
+
+      btn.innerHTML = '<span class="loading"></span> Fetching...';
+      btn.disabled = true;
+
+      const r = await safeFetch(BASE + '/orders/' + encodeURIComponent(orderId), {
+        method: 'GET',
+        headers: { 'x-api-key': apiKey }
+      });
+
+      btn.innerHTML = '<span>Get Order</span>';
+      btn.disabled = false;
+
+      if (r.ok) {
+        showOutput('getOutput', r.body, r.status);
+      } else {
+        showOutput('getOutput', r.body, r.status, true);
+      }
+    };
+
+    // List APIs
+    document.getElementById('listApisBtn').onclick = async function() {
+      const r = await safeFetch(BASE + '/apis');
+      if (r.ok) {
+        showOutput('apisOutput', r.body, r.status);
+      } else {
+        showOutput('apisOutput', r.body, r.status, true);
+      }
+    };
+
+    // Initialize
+    checkHealth();
+
+    // Live Reload for Localhost Development
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      console.log('🔄 Live reload enabled - checking every 5 seconds');
+
+      let lastEtag = null;
+
+      // Check for updates every 5 seconds (less frequent)
+      setInterval(async () => {
+        try {
+          const response = await fetch(window.location.href, { method: 'HEAD' });
+          const currentEtag = response.headers.get('ETag');
+
+          if (currentEtag && currentEtag !== lastEtag && lastEtag !== null) {
+            console.log('✅ File changed, reloading...');
+            window.location.reload();
+          }
+          lastEtag = currentEtag;
+        } catch (err) {
+          // Silently ignore network errors
+        }
+      }, 5000);
+    }
+  </script>
 </body>
 </html>

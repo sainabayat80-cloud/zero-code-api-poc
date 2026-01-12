@@ -1,0 +1,245 @@
+openapi: 3.0.0
+info:
+  title: Zero-Code API Generator
+  description: |
+    GPT-powered REST API generator for DBA thesis project.
+    Generate production-ready APIs from natural language descriptions.
+  version: 1.0.0
+  contact:
+    name: API Support
+
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+
+paths:
+  /health:
+    get:
+      summary: Health check
+      description: Check server status and configuration
+      tags: [System]
+      responses:
+        '200':
+          description: Server is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  version:
+                    type: string
+                  features:
+                    type: object
+                  generatedApis:
+                    type: integer
+
+  /generate:
+    post:
+      summary: Generate API from prompt
+      description: |
+        Generate a REST API specification from natural language.
+        Uses GPT-4 when OPENAI_API_KEY is configured, otherwise falls back to rule-based generation.
+      tags: [Generator]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [prompt]
+              properties:
+                prompt:
+                  type: string
+                  description: Natural language description of the desired API
+                  example: "Create an orders API with POST /orders and GET /orders/:id"
+
+      responses:
+        '200':
+          description: API generated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: Unique API identifier
+                  apiKey:
+                    type: string
+                    description: API key for authentication
+                  spec:
+                    type: object
+                    description: OpenAPI specification
+                  endpoints:
+                    type: array
+                    items:
+                      type: string
+                  message:
+                    type: string
+        '400':
+          description: Invalid request
+        '500':
+          description: Generation failed
+
+  /apis:
+    get:
+      summary: List all generated APIs
+      description: Returns a list of all generated APIs with their metadata
+      tags: [Management]
+      responses:
+        '200':
+          description: List of APIs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  apis:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        prompt:
+                          type: string
+                        endpoints:
+                          type: array
+                          items:
+                            type: string
+                        createdAt:
+                          type: string
+                          format: date-time
+
+  /specs/{id}:
+    get:
+      summary: Get API specification
+      description: Retrieve the full OpenAPI specification for a generated API
+      tags: [Management]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: API identifier
+      responses:
+        '200':
+          description: API specification
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          description: API not found
+
+  /orders:
+    post:
+      summary: Create order
+      description: Create a new order (requires API key)
+      tags: [Orders]
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [orderItems, totalAmount]
+              properties:
+                orderItems:
+                  type: array
+                  items:
+                    type: object
+                  description: Array of order items
+                totalAmount:
+                  type: number
+                  description: Total order amount (>= 0)
+      responses:
+        '201':
+          description: Order created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '400':
+          description: Invalid request
+        '401':
+          description: Missing API key
+        '403':
+          description: Invalid API key
+
+  /orders/{id}:
+    get:
+      summary: Get order by ID
+      description: Retrieve an order by its ID (requires API key)
+      tags: [Orders]
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Order ID
+      responses:
+        '200':
+          description: Order details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '401':
+          description: Missing API key
+        '403':
+          description: Invalid API key
+        '404':
+          description: Order not found
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: API key obtained from /generate endpoint
+
+  schemas:
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique order identifier
+        orderItems:
+          type: array
+          items:
+            type: object
+          description: Items in the order
+        totalAmount:
+          type: number
+          description: Total amount
+        status:
+          type: string
+          enum: [pending, shipped, cancelled]
+          description: Order status
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation timestamp
+
+tags:
+  - name: System
+    description: System health and status endpoints
+  - name: Generator
+    description: GPT-powered API generation
+  - name: Management
+    description: API management and specification endpoints
+  - name: Orders
+    description: Order management (generated API example)

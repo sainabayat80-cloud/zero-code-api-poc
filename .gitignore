@@ -205,6 +205,23 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
-server/data.db 
-"node_modules/" 
-"server/node_modules/" 
+server/data.db
+"node_modules/"
+"server/node_modules/"
+
+# Node.js
+node_modules/
+package-lock.json
+
+# Generated API data (large files)
+server/keys.json
+server/*.db
+server/*.db-journal
+
+# Environment variables
+server/.env
+.env
+
+# Logs
+*.log
+npm-debug.log* 

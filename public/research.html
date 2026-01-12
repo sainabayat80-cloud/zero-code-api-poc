@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Research Context | Zero-Code API Generator</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-card: #1a1a24;
+      --text-primary: #f0f0f5;
+      --text-secondary: #a0a0b0;
+      --accent-blue: #6366f1;
+      --accent-purple: #8b5cf6;
+      --accent-cyan: #06b6d4;
+      --accent-green: #10b981;
+      --accent-orange: #f97316;
+      --border-color: #2a2a3a;
+    }
+
+    body {
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.7;
+    }
+
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(10, 10, 15, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .nav-logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      color: var(--accent-cyan);
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 120px 20px 80px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 6px 14px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, var(--text-primary), var(--accent-cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 1rem;
+    }
+
+    .author {
+      margin-top: 20px;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    section {
+      margin-bottom: 60px;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      color: var(--accent-cyan);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    h2::before {
+      content: '';
+      width: 4px;
+      height: 24px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      border-radius: 2px;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+      color: var(--text-primary);
+      margin-top: 24px;
+    }
+
+    p {
+      margin-bottom: 16px;
+      color: var(--text-secondary);
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+      border-left: 4px solid var(--accent-blue);
+      padding: 20px;
+      border-radius: 0 12px 12px 0;
+      margin: 24px 0;
+    }
+
+    .theory-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin: 24px 0;
+    }
+
+    .theory-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 20px;
+      transition: border-color 0.3s;
+    }
+
+    .theory-card:hover {
+      border-color: var(--accent-blue);
+    }
+
+    .theory-icon {
+      font-size: 24px;
+      margin-bottom: 12px;
+    }
+
+    .theory-title {
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+
+    .theory-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .hypothesis-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .hypothesis-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .hypothesis-badge {
+      background: linear-gradient(135deg, var(--accent-green), var(--accent-cyan));
+      color: var(--bg-primary);
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .metric {
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .metric-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+    }
+
+    .metric-label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    .diagram {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 32px;
+      margin: 24px 0;
+      overflow-x: auto;
+    }
+
+    .flow-steps {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .flow-step {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 16px 20px;
+      text-align: center;
+      min-width: 140px;
+    }
+
+    .flow-icon {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .flow-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .flow-arrow {
+      color: var(--accent-blue);
+      font-size: 20px;
+    }
+
+    ul, ol {
+      margin-left: 24px;
+      margin-bottom: 16px;
+      color: var(--text-secondary);
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    .reference-list {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 24px;
+      font-size: 0.85rem;
+    }
+
+    .reference-list li {
+      margin-bottom: 12px;
+      color: var(--text-secondary);
+    }
+
+    .cta-section {
+      text-align: center;
+      padding: 40px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      margin-top: 40px;
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 28px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      margin-top: 20px;
+      transition: transform 0.2s;
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 1.6rem; }
+      .container { padding: 100px 16px 40px; }
+      .theory-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-logo">
+      <div class="nav-logo-icon">⚡</div>
+      <span>Zero-Code API Generator</span>
+    </div>
+    <div class="nav-links">
+      <a href="/" class="nav-link">Demo</a>
+      <a href="/research" class="nav-link active">Research</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <header class="header">
+      <span class="tag">DBA Dissertation Research</span>
+      <h1>Development of an Autonomous AI Deployment System for API Management</h1>
+      <p class="subtitle">A Zero-Code, Industry-Agnostic Approach to Enterprise AI Integration</p>
+      <p class="author">
+        <strong>Saina Bayat</strong> | Signum Magnum College | Supervised by Prof. Dr. Walter Kurz
+      </p>
+    </header>
+
+    <!-- Research Problem -->
+    <section>
+      <h2>Research Problem</h2>
+      <div class="highlight-box">
+        <p><strong>Existing Gaps in Automated AI Deployment Systems:</strong></p>
+        <ul>
+          <li>Fragmented deployment pipelines requiring manual configuration</li>
+          <li>Lack of semantic interoperability across domains</li>
+          <li>Insufficient support for dynamic adaptation</li>
+          <li>Absence of full-cycle automation without human intervention</li>
+          <li>Limited accessibility for non-technical users</li>
+        </ul>
+      </div>
+      <p>Current frameworks rely heavily on manual scripting and DevOps integration, restricting scalability and accessibility in enterprise contexts (Sinha & Lee, 2024).</p>
+    </section>
+
+    <!-- Theoretical Framework -->
+    <section>
+      <h2>Theoretical Framework</h2>
+      <div class="theory-grid">
+        <div class="theory-card">
+          <div class="theory-icon">🔧</div>
+          <div class="theory-title">Model-Driven Engineering</div>
+          <div class="theory-desc">Declarative specifications transformed into executable code (Feurer et al., 2015)</div>
+        </div>
+        <div class="theory-card">
+          <div class="theory-icon">🧠</div>
+          <div class="theory-title">Cognitive Load Theory</div>
+          <div class="theory-desc">Visual interfaces reduce complexity for non-technical users (Sweller, 1988)</div>
+        </div>
+        <div class="theory-card">
+          <div class="theory-icon">💬</div>
+          <div class="theory-title">NLP & Intent Recognition</div>
+          <div class="theory-desc">BERT/GPT models enable semantic understanding (Brown et al., 2020)</div>
+        </div>
+        <div class="theory-card">
+          <div class="theory-icon">🔄</div>
+          <div class="theory-title">Technology Acceptance Model</div>
+          <div class="theory-desc">Perceived ease of use drives adoption (Davis, 1989)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- System Architecture -->
+    <section>
+      <h2>System Architecture</h2>
+      <p>The proof-of-concept demonstrates how natural language input flows through GPT-4 to generate functional REST APIs:</p>
+      <div class="diagram">
+        <div class="flow-steps">
+          <div class="flow-step">
+            <div class="flow-icon">👤</div>
+            <div class="flow-label">User Input<br/>(Natural Language)</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-icon">🤖</div>
+            <div class="flow-label">GPT-4<br/>(Intent Recognition)</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-icon">📋</div>
+            <div class="flow-label">OpenAPI 3.0<br/>(Specification)</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-icon">⚙️</div>
+            <div class="flow-label">Runtime<br/>(Endpoints)</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-icon">💾</div>
+            <div class="flow-label">SQLite<br/>(Persistence)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Hypotheses -->
+    <section>
+      <h2>Research Hypotheses</h2>
+
+      <div class="hypothesis-box">
+        <div class="hypothesis-header">
+          <span class="hypothesis-badge">H1</span>
+          <h3 style="margin: 0; color: var(--accent-cyan);">Usability & Accessibility</h3>
+        </div>
+        <p><em>"A zero-code API design framework based on natural language input will significantly increase accessibility for non-technical users compared to traditional API management tools."</em></p>
+        <div class="metrics">
+          <div class="metric">
+            <div class="metric-value">1</div>
+            <div class="metric-label">Step Required</div>
+          </div>
+          <div class="metric">
+            <div class="metric-value">&lt;30s</div>
+            <div class="metric-label">Time to Generate</div>
+          </div>
+          <div class="metric">
+            <div class="metric-value">0</div>
+            <div class="metric-label">Code Lines Needed</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hypothesis-box">
+        <div class="hypothesis-header">
+          <span class="hypothesis-badge">H2</span>
+          <h3 style="margin: 0; color: var(--accent-cyan);">Organizational Impact</h3>
+        </div>
+        <p><em>"The design of a zero-code API system will lower the skill threshold required for enterprise API management, thereby fostering innovation and reducing reliance on specialized IT teams."</em></p>
+        <div class="metrics">
+          <div class="metric">
+            <div class="metric-value">↓</div>
+            <div class="metric-label">IT Dependency</div>
+          </div>
+          <div class="metric">
+            <div class="metric-value">↑</div>
+            <div class="metric-label">Innovation Speed</div>
+          </div>
+          <div class="metric">
+            <div class="metric-value">↓</div>
+            <div class="metric-label">Skill Threshold</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Demo Validation -->
+    <section>
+      <h2>Proof-of-Concept Validation</h2>
+      <p>The accompanying demo provides empirical validation for both hypotheses:</p>
+
+      <div class="highlight-box" style="border-left-color: var(--accent-green);">
+        <h3 style="color: var(--accent-cyan); margin-bottom: 12px;">🎯 H1 Validation: Accessibility Metrics</h3>
+        <ul>
+          <li><strong>Single Step:</strong> Users only need to describe their API in natural language</li>
+          <li><strong>&lt;30 Second Generation:</strong> GPT-4 produces functional endpoints in real-time</li>
+          <li><strong>Zero Code Required:</strong> No programming knowledge needed to generate production-ready APIs</li>
+        </ul>
+      </div>
+
+      <div class="highlight-box" style="border-left-color: var(--accent-orange);">
+        <h3 style="color: var(--accent-cyan); margin-bottom: 12px;">🏢 H2 Validation: Organizational Impact</h3>
+        <ul>
+          <li><strong>Reduced IT Dependency:</strong> Business units can create APIs without developer intervention</li>
+          <li><strong>Faster Innovation Cycles:</strong> Rapid prototyping enables quick iteration and testing</li>
+          <li><strong>Lowered Skill Threshold:</strong> Non-technical users can deploy REST APIs independently</li>
+        </ul>
+      </div>
+
+      <div style="text-align: center; margin-top: 24px;">
+        <a href="/" class="cta-btn" style="margin-top: 0;">
+          <span>🚀</span>
+          <span>Try the Demo Now</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Industry Applications -->
+    <section>
+      <h2>Industry Applications</h2>
+      <div class="card">
+        <h3>📦 Logistics</h3>
+        <p>Real-time tracking APIs, supply chain optimization, partner integration (Schmidt & Bauer, 2020)</p>
+      </div>
+      <div class="card">
+        <h3>💰 Financial Services</h3>
+        <p>Payment automation, PSD2/MiFID II compliance, third-party integration (Keller et al., 2023)</p>
+      </div>
+      <div class="card">
+        <h3>🏥 Healthcare</h3>
+        <p>Diagnostic AI services, patient communication, GDPR/HIPAA compliance (WHO, 2022)</p>
+      </div>
+    </section>
+
+    <!-- Methodology -->
+    <section>
+      <h2>Research Methodology</h2>
+      <p>This study employs <strong>Design Science Research (DSR)</strong> methodology (Hevner et al., 2004), focusing on:</p>
+      <ol>
+        <li><strong>Systematic Literature Review</strong> - Zero-code platforms, API management, NLP intent recognition</li>
+        <li><strong>Expert Interviews</strong> - IT architects, compliance officers, API developers</li>
+        <li><strong>Usability Evaluation</strong> - Non-technical users test mockups with TAM-based surveys</li>
+      </ol>
+      <p>Validation occurs through triangulation of findings from all three data sources.</p>
+    </section>
+
+    <!-- Key References -->
+    <section>
+      <h2>Key References</h2>
+      <ul class="reference-list">
+        <li>Brown, T. et al. (2020). Language Models are Few-Shot Learners. NeurIPS.</li>
+        <li>Davis, F. D. (1989). Perceived usefulness, perceived ease of use, and user acceptance. MIS Quarterly.</li>
+        <li>Feurer, M. et al. (2015). Efficient and Robust Automated Machine Learning. NeurIPS.</li>
+        <li>Hevner, A. R. et al. (2004). Design science in information systems research. MIS Quarterly.</li>
+        <li>Sinha, A. & Lee, J. (2024). Industrial AI applications and deployment challenges.</li>
+        <li>Sweller, J. (1988). Cognitive Load During Problem Solving. Cognitive Science.</li>
+      </ul>
+    </section>
+
+    <!-- CTA -->
+    <div class="cta-section">
+      <h3>Experience the Proof-of-Concept</h3>
+      <p style="margin-top: 12px;">See the research in action - generate your first AI-powered API</p>
+      <a href="/" class="cta-btn">
+        <span>🚀</span>
+        <span>Try the Demo</span>
+      </a>
+    </div>
+  </div>
+
+  <script>
+    // Live Reload for Localhost Development
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      console.log('🔄 Live reload enabled - checking every 5 seconds');
+
+      let lastEtag = null;
+
+      // Check for updates every 5 seconds (less frequent)
+      setInterval(async () => {
+        try {
+          const response = await fetch(window.location.href, { method: 'HEAD' });
+          const currentEtag = response.headers.get('ETag');
+
+          if (currentEtag && currentEtag !== lastEtag && lastEtag !== null) {
+            console.log('✅ File changed, reloading...');
+            window.location.reload();
+          }
+          lastEtag = currentEtag;
+        } catch (err) {
+          // Silently ignore network errors
+        }
+      }, 5000);
+    }
+  </script>
+</body>
+</html>
