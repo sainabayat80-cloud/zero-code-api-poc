@@ -78,8 +78,8 @@ Be concise. Focus on CRUD operations for the main resource.`
             content: prompt
           }
         ],
-        temperature: 0.3,
-        max_tokens: 2000,
+        temperature: 0.4,
+        max_tokens: 20000,
         response_format: { type: 'json_object' }
       });
 
