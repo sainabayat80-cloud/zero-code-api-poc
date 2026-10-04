@@ -5,12 +5,20 @@ const OpenAI = require('openai');
  * Generates REST API specifications from natural language descriptions
  */
 class OpenAIGenerator {
-  constructor() {
+ /* constructor() {
     // Only initialize OpenAI client if API key is available
     this.client = process.env.OPENAI_API_KEY
       ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
       : null;
+  } */
+    constructor() {
+    this.ENABLE_LLM = false;
+
+    this.client = this.ENABLE_LLM && process.env.OPENAI_API_KEY
+      ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+      : null;
   }
+
 
   /**
    * Generate OpenAPI specification from natural language prompt
@@ -18,8 +26,12 @@ class OpenAIGenerator {
    * @returns {Promise<Object>} - Generated API specification and runtime config
    */
   async generateFromPrompt(prompt) {
-    if (!this.client) {
+   /* if (!this.client) {
       console.warn('OPENAI_API_KEY not set, falling back to rule-based generation');
+      return this._fallbackGeneration(prompt);
+    }  */
+    if (!this.ENABLE_LLM || !this.client) {
+      console.warn('LLM temporarily disabled, falling back to rule-based generation');
       return this._fallbackGeneration(prompt);
     }
 
