@@ -12,7 +12,7 @@ class OpenAIGenerator {
       : null;
   } */
     constructor() {
-    this.ENABLE_LLM = false;
+    this.ENABLE_LLM = true;
 
     this.client = this.ENABLE_LLM && process.env.OPENAI_API_KEY
       ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
